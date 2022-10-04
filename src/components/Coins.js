@@ -1,38 +1,11 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-const coins = [
-  {
-    id: 'btc-bitcoin',
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    rank: 1,
-    is_new: false,
-    is_active: true,
-    type: 'coin',
-  },
-  {
-    id: 'eth-ethereum',
-    name: 'Ethereum',
-    symbol: 'ETH',
-    rank: 2,
-    is_new: false,
-    is_active: true,
-    type: 'coin',
-  },
-  {
-    id: 'usdt-tether',
-    name: 'Tether',
-    symbol: 'USDT',
-    rank: 3,
-    is_new: false,
-    is_active: true,
-    type: 'token',
-  },
-];
-
 const Container = styled.div`
-  margin: 5px 10px;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 5px 10px;
 `;
 const Header = styled.header`
   display: flex;
@@ -55,31 +28,70 @@ const Coin = styled.li`
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 15px;
-  font-weight: bold;
   a {
-    display: block;
+    display: flex;
+    align-items: center;
   }
+`;
+const Img = styled.img`
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
+`;
+
+const Loader = styled.span`
+  display: flex;
+  justify-content: center;
+  font-size: 40px;
 `;
 
 const Coins = () => {
+  const [load, setLoad] = useState(true);
+  const [coins, setCoins] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const json = (
+        await fetch('https://api.coinpaprika.com/v1/coins').then((res) =>
+          res.json()
+        )
+      ).slice(0, 50);
+      setCoins(json);
+      setLoad(false);
+    })();
+  }, []);
+
   return (
     <Container>
       <Header>
         <Title>Coins</Title>
         {/* <NavBtn>
-          <Link to={'/'}>To list</Link>
-        </NavBtn> */}
+        <Link to={'/'}>To list</Link>
+      </NavBtn> */}
       </Header>
       <MainContainer>
-        <CoinList>
-          {coins.map((coin, index) => (
-            <Coin key={index}>
-              <Link to={`/${coin.id}`}>
-                {coin.name.toUpperCase()} / {coin.id}
-              </Link>
-            </Coin>
-          ))}
-        </CoinList>
+        {load ? (
+          <Loader>Loading...</Loader>
+        ) : (
+          <CoinList>
+            {coins.map((coin, index) => (
+              <Coin key={index}>
+                <Link
+                  to={{
+                    pathname: `/${coin.id}`,
+                    state: coin,
+                  }}
+                >
+                  <Img
+                    src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLocaleLowerCase()}`}
+                    alt='Coin icon'
+                  />
+                  {coin.name.toUpperCase()} / {coin.id.toUpperCase()}
+                </Link>
+              </Coin>
+            ))}
+          </CoinList>
+        )}
       </MainContainer>
     </Container>
   );
