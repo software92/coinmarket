@@ -79,7 +79,6 @@ const Coins = () => {
                 <Link
                   to={{
                     pathname: `/${coin.id}`,
-                    state: coin,
                   }}
                 >
                   <Img
