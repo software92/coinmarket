@@ -6,7 +6,7 @@ import App from './App';
 const mainTheme = {
   textColor: '#f5f5f5',
   backgroundColor: '#d9dbbd',
-  accentColor: '#1f2937',
+  accentColor: '#b6b8a2',
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
