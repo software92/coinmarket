@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider } from 'styled-components';
 import App from './App';
+
+const queryClient = new QueryClient();
 
 const mainTheme = {
   textColor: '#f5f5f5',
@@ -11,7 +14,9 @@ const mainTheme = {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <ThemeProvider theme={mainTheme}>
-    <App />
-  </ThemeProvider>
+  <QueryClientProvider client={queryClient}>
+    <ThemeProvider theme={mainTheme}>
+      <App />
+    </ThemeProvider>
+  </QueryClientProvider>
 );

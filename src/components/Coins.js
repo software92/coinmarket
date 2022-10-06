@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { getCoins } from '../api';
 
 const Container = styled.div`
   max-width: 500px;
@@ -46,20 +47,7 @@ const Loader = styled.span`
 `;
 
 const Coins = () => {
-  const [load, setLoad] = useState(true);
-  const [coins, setCoins] = useState([]);
-
-  useEffect(() => {
-    (async () => {
-      const json = (
-        await fetch('https://api.coinpaprika.com/v1/coins').then((res) =>
-          res.json()
-        )
-      ).slice(0, 50);
-      setCoins(json);
-      setLoad(false);
-    })();
-  }, []);
+  const { isLoading, data } = useQuery('coins', getCoins);
 
   return (
     <Container>
@@ -70,11 +58,11 @@ const Coins = () => {
       </NavBtn> */}
       </Header>
       <MainContainer>
-        {load ? (
+        {isLoading ? (
           <Loader>Loading...</Loader>
         ) : (
           <CoinList>
-            {coins.map((coin, index) => (
+            {data.slice(0, 50)?.map((coin, index) => (
               <Coin key={index}>
                 <Link
                   to={{

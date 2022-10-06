@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import {
   Link,
   Route,
@@ -7,6 +7,7 @@ import {
   useRouteMatch,
 } from 'react-router-dom';
 import styled from 'styled-components';
+import { getCoin, getCoinPrice } from '../api';
 
 const Container = styled.div`
   max-width: 500px;
@@ -79,61 +80,50 @@ const Loader = styled.span`
 
 const Coin = () => {
   const { coinId } = useParams();
-  const [load, setLoad] = useState(true);
-  const [coin, setCoin] = useState({});
-  const [coinPrice, setCoinPrice] = useState({});
-
   const priceMatch = useRouteMatch('/:coinId/price');
   const chartMatch = useRouteMatch('/:coinId/chart');
 
-  useEffect(() => {
-    (async () => {
-      const coin = await fetch(
-        `https://api.coinpaprika.com/v1/coins/${coinId}`
-      ).then((res) => res.json());
-
-      const coinPrice = await fetch(
-        `https://api.coinpaprika.com/v1/tickers/${coinId}`
-      ).then((res) => res.json());
-
-      setCoin(coin);
-      setCoinPrice(coinPrice);
-      setLoad(false);
-    })();
-  }, [coinId]);
+  const { isLoading: coinLoading, data: coin } = useQuery(
+    ['coin', coinId],
+    () => getCoin(coinId)
+  );
+  const { isLoading: coinPriceLoading, data: coinPrice } = useQuery(
+    ['price', coinId],
+    () => getCoinPrice(coinId)
+  );
 
   return (
     <Container>
       <Header>
         <Title>{coinId.toUpperCase()}</Title>
       </Header>
-      {load ? (
+      {coinLoading && coinPriceLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <MainContainer>
           <Block>
             <BlockItem>
               <span>Rank:</span>
-              <span>{coin.rank}</span>
+              <span>{coin?.rank}</span>
             </BlockItem>
             <BlockItem>
               <span>Symbol:</span>
-              <span>{coin.symbol}</span>
+              <span>{coin?.symbol}</span>
             </BlockItem>
             <BlockItem>
               <span>Open Source:</span>
-              <span>{coin.open_source ? 'Yes' : 'No'}</span>
+              <span>{coin?.open_source ? 'Yes' : 'No'}</span>
             </BlockItem>
           </Block>
-          <Description>{coin.description}</Description>
+          <Description>{coin?.description}</Description>
           <Block>
             <BlockItem>
               <span>Total Supply:</span>
-              <span>{coinPrice.total_supply}</span>
+              <span>{coinPrice?.total_supply}</span>
             </BlockItem>
             <BlockItem>
               <span>Max Supply:</span>
-              <span>{coinPrice.max_supply}</span>
+              <span>{coinPrice?.max_supply}</span>
             </BlockItem>
           </Block>
 
