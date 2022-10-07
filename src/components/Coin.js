@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import styled from 'styled-components';
 import { getCoin, getCoinPrice } from '../api';
+import Chart from './Chart';
 
 const Container = styled.div`
   max-width: 500px;
@@ -89,7 +90,10 @@ const Coin = () => {
   );
   const { isLoading: coinPriceLoading, data: coinPrice } = useQuery(
     ['price', coinId],
-    () => getCoinPrice(coinId)
+    () => getCoinPrice(coinId),
+    {
+      refetchInterval: 86400,
+    }
   );
 
   return (
@@ -111,8 +115,8 @@ const Coin = () => {
               <span>{coin?.symbol}</span>
             </BlockItem>
             <BlockItem>
-              <span>Open Source:</span>
-              <span>{coin?.open_source ? 'Yes' : 'No'}</span>
+              <span>Price:</span>
+              <span>{coinPrice?.quotes.USD.price}</span>
             </BlockItem>
           </Block>
           <Description>{coin?.description}</Description>
@@ -137,10 +141,10 @@ const Coin = () => {
           </Tabs>
           <Switch>
             <Route path={'/:coinId/price'}>
-              <p>a</p>
+              <p>Price</p>
             </Route>
             <Route path={'/:coinId/chart'}>
-              <p>b</p>
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </MainContainer>
