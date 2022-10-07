@@ -2,6 +2,8 @@ import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { getCoins } from '../api';
+import Loader from './Loader';
+import Helmet from 'react-helmet';
 
 const Container = styled.div`
   max-width: 500px;
@@ -40,17 +42,14 @@ const Img = styled.img`
   margin-right: 10px;
 `;
 
-const Loader = styled.span`
-  display: flex;
-  justify-content: center;
-  font-size: 40px;
-`;
-
 const Coins = () => {
   const { isLoading, data } = useQuery('coins', getCoins);
 
   return (
     <Container>
+      <Helmet>
+        <title>Coin market</title>
+      </Helmet>
       <Header>
         <Title>Coins</Title>
         {/* <NavBtn>
@@ -59,7 +58,7 @@ const Coins = () => {
       </Header>
       <MainContainer>
         {isLoading ? (
-          <Loader>Loading...</Loader>
+          <Loader />
         ) : (
           <CoinList>
             {data.slice(0, 50)?.map((coin, index) => (

@@ -2,6 +2,7 @@ import { useQuery } from 'react-query';
 import { getCoinChart } from '../api';
 import PropTypes from 'prop-types';
 import ApexChart from 'react-apexcharts';
+import Loader from './Loader';
 
 const Chart = ({ coinId }) => {
   const { isLoading, data } = useQuery([['coin', 'chart']], () =>
@@ -9,7 +10,7 @@ const Chart = ({ coinId }) => {
   );
 
   return isLoading ? (
-    <h1>Loading...</h1>
+    <Loader />
   ) : (
     <ApexChart
       type='line'

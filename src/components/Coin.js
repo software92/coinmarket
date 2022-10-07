@@ -9,6 +9,8 @@ import {
 import styled from 'styled-components';
 import { getCoin, getCoinPrice } from '../api';
 import Chart from './Chart';
+import Loader from './Loader';
+import Helmet from 'react-helmet';
 
 const Container = styled.div`
   max-width: 500px;
@@ -73,12 +75,6 @@ const Tab = styled.div`
   }
 `;
 
-const Loader = styled.span`
-  display: flex;
-  justify-content: center;
-  font-size: 40px;
-`;
-
 const Coin = () => {
   const { coinId } = useParams();
   const priceMatch = useRouteMatch('/:coinId/price');
@@ -98,11 +94,14 @@ const Coin = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>Coin market: {coinId.toUpperCase()}</title>
+      </Helmet>
       <Header>
         <Title>{coinId.toUpperCase()}</Title>
       </Header>
       {coinLoading && coinPriceLoading ? (
-        <Loader>Loading...</Loader>
+        <Loader />
       ) : (
         <MainContainer>
           <Block>
