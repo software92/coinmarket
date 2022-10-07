@@ -75,6 +75,16 @@ const Tab = styled.div`
   }
 `;
 
+const NavBtn = styled.span`
+  font-size: 15px;
+  font-weight: bold;
+  margin-left: 30px;
+  background-color: red;
+  color: white;
+  padding: 10px;
+  border-radius: 20px;
+`;
+
 const Coin = () => {
   const { coinId } = useParams();
   const priceMatch = useRouteMatch('/:coinId/price');
@@ -99,6 +109,9 @@ const Coin = () => {
       </Helmet>
       <Header>
         <Title>{coinId.toUpperCase()}</Title>
+        <NavBtn>
+          <Link to={'/'}>To list</Link>
+        </NavBtn>
       </Header>
       {coinLoading && coinPriceLoading ? (
         <Loader />

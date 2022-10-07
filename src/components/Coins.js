@@ -21,9 +21,6 @@ const Title = styled.h1`
   font-weight: bold;
   //   margin-right: 40px;
 `;
-// const NavBtn = styled.span`
-//   font-size: 15px;
-// `;
 const MainContainer = styled.div``;
 const CoinList = styled.ul``;
 const Coin = styled.li`
@@ -52,9 +49,6 @@ const Coins = () => {
       </Helmet>
       <Header>
         <Title>Coins</Title>
-        {/* <NavBtn>
-        <Link to={'/'}>To list</Link>
-      </NavBtn> */}
       </Header>
       <MainContainer>
         {isLoading ? (
